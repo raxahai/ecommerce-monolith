@@ -2,18 +2,11 @@ package com.raza.ecommerce.service.impl;
 
 import com.raza.ecommerce.entity.Product;
 import com.raza.ecommerce.repository.ProductRepository;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-import com.raza.ecommerce.service.ProductService;
 import org.junit.jupiter.api.Test;
-
-import static org.mockito.Mockito.*;
-
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -21,17 +14,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@SpringBootTest
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
 public class ProductServiceTest {
-    @MockBean
+    @Mock
     private ProductRepository mockProductRepository;
 
-    @Autowired
-    private ProductService productService;
+    @InjectMocks
+    private ProductServiceImpl productService;
 
-    void setUp() {
-        MockitoAnnotations.openMocks(ProductServiceTest.class);
-    }
 
     final List<Product> testProducts = new ArrayList<>(Arrays.asList(
             new Product(1L, "test-product-1", "test description-1",
