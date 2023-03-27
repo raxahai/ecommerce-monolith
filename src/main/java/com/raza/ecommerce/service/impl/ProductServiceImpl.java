@@ -1,6 +1,7 @@
 package com.raza.ecommerce.service.impl;
 
 import com.raza.ecommerce.entity.Product;
+import com.raza.ecommerce.exception.ProductException;
 import com.raza.ecommerce.repository.ProductRepository;
 import com.raza.ecommerce.service.ProductService;
 import org.springframework.stereotype.Service;
@@ -19,5 +20,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> fetchAll() {
         return productRepository.findAll();
+    }
+
+    @Override
+    public Product fetchById(Long id) {
+        return productRepository.findById(id).orElseThrow(() -> new ProductException("Product with ID not found"));
     }
 }
