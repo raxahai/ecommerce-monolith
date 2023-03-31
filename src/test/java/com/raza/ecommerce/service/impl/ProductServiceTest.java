@@ -1,13 +1,17 @@
 package com.raza.ecommerce.service.impl;
 
+import com.raza.ecommerce.dto.request.CreateProductDto;
 import com.raza.ecommerce.entity.Product;
 import com.raza.ecommerce.exception.ProductException;
 import com.raza.ecommerce.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -17,6 +21,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mockitoSession;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -56,6 +62,21 @@ public class ProductServiceTest {
 
     @Test()
     void shouldThrowException_FetchProductById() {
-        assertThrows(ProductException.class,()->productService.fetchById(1L));
+        assertThrows(ProductException.class, () -> productService.fetchById(1L));
+    }
+
+    @Test
+    void givenProduct_thenReturnProduct_andSave() {
+        CreateProductDto createProductDto = new CreateProductDto("test-product-1", "test description-1");
+        Product testProduct = new Product();
+        testProduct.setName("test-product-1");
+        testProduct.setDescription("test description-1");
+
+        when(mockProductRepository.save(any(Product.class))).thenReturn(testProduct);
+
+        Product result = productService.save(createProductDto);
+
+        assertEquals(result.getName(), testProduct.getName());
+        assertEquals(result.getDescription(), testProduct.getDescription());
     }
 }
