@@ -1,11 +1,9 @@
 package com.raza.ecommerce.controller;
 
+import com.raza.ecommerce.dto.request.CreateProductDto;
 import com.raza.ecommerce.entity.Product;
 import com.raza.ecommerce.service.ProductService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +25,10 @@ public class ProductController {
     @GetMapping("/{id}")
     private Product fetchAllProducts(@PathVariable("id") Long id) {
         return productService.fetchById(id);
+    }
+
+    @PostMapping("/save")
+    private Product saveProduct(@RequestBody CreateProductDto createProductDto) {
+        return productService.save(createProductDto);
     }
 }

@@ -1,5 +1,7 @@
 package com.raza.ecommerce.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.raza.ecommerce.dto.request.CreateProductDto;
 import com.raza.ecommerce.entity.Product;
 import com.raza.ecommerce.service.ProductService;
 import org.junit.jupiter.api.Test;
@@ -12,6 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.result.ContentResultMatchers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -20,8 +23,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ProductController.class)
@@ -57,6 +62,25 @@ public class ProductControllerTest {
         when(productService.fetchById(1L)).thenReturn(testProduct);
 
         mockMvc.perform(get("/api/v1/product/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void givenCreateProductDTO_whenSave_thenReturnJsonArray() throws Exception{
+        CreateProductDto createProductDto = new CreateProductDto("test-product-1", "test description-1");
+        Product testProduct = new Product(1L, "test-product-1", "test description-1",
+                Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now()));
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(createProductDto);
+
+        when(productService.save(createProductDto)).thenReturn(testProduct);
+
+        final Product product = productService.save(createProductDto);
+        String productJson = objectMapper.writeValueAsString(product);
+
+        mockMvc.perform(post("/api/v1/product/save")
+                        .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
