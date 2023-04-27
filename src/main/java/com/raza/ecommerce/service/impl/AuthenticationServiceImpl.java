@@ -41,7 +41,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public LoginResponseDto login(LoginRequest loginRequest) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),loginRequest.getPassword()));
-        User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(()-> new UsernameNotFoundException("User not found"));
+        User user = userRepository.findByEmailAndDeletedAtIsNull(loginRequest.getEmail()).orElseThrow(()-> new UsernameNotFoundException("User not found"));
         return LoginResponseDto.builder()
                 .userId(user.getId())
                 .token(jwtService.generateToken(user))
