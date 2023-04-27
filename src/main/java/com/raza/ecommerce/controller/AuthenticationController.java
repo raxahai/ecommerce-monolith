@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("api/v1/auth")
 public class AuthenticationController {
@@ -22,7 +24,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<Void> register(@Valid @RequestBody RegisterRequest registerRequest) {
         authenticationService.register(registerRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
